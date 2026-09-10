@@ -19,6 +19,13 @@ services:
     ports:
       - "2947:2947"
 
+    healthcheck:
+      test: ["CMD", "sh", "-c", "nc -z 127.0.0.1 2947"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+      start_period: 5s
+
   gps:
     build: .
     container_name: openvarde-gps
@@ -39,7 +46,8 @@ services:
       - openvarde
 
     depends_on:
-      - gpsd
+      gpsd:
+        condition: service_healthy
 
 volumes:
   openvarde-data:
