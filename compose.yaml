@@ -13,6 +13,9 @@ services:
       exec gpsd -N -n -G /dev/ttyUSB0
       "
 
+    networks:
+      - openvarde
+
     ports:
       - "2947:2947"
 
@@ -30,7 +33,19 @@ services:
       OPENVARDE_DATA_DIR: /var/lib/openvarde
 
     volumes:
-      - /var/lib/openvarde:/var/lib/openvarde:ro
+      - openvarde-data:/var/lib/openvarde:ro
+
+    networks:
+      - openvarde
 
     depends_on:
       - gpsd
+
+volumes:
+  openvarde-data:
+    external: true
+    name: openvarde-data
+
+networks:
+  openvarde:
+    external: true
